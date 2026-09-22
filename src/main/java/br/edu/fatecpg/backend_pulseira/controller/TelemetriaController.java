@@ -11,7 +11,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/telemetrias")
-
 public class TelemetriaController {
 
     private final TelemetriaService telemetriaService;
@@ -21,12 +20,13 @@ public class TelemetriaController {
 
     @PostMapping
     public ResponseEntity<TelemetriaResponseDTO> receberTelemetria(@RequestBody TelemetriaRequestDTO dto) {
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        TelemetriaResponseDTO resposta = telemetriaService.salvar(dto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(resposta);
     }
     @GetMapping("/{dispositivoId}")
     public ResponseEntity<List<TelemetriaResponseDTO>> buscarPorDispositivos(@PathVariable String dispositivoId) {
-
-        return ResponseEntity.ok(List.of());
+    List<TelemetriaResponseDTO> historico = telemetriaService.buscarPorDispositivo(dispositivoId);
+        return ResponseEntity.ok(historico);
 
     }
 }

@@ -7,7 +7,7 @@ public record TelemetriaResponseDTO(
         String dispositivoId,
         String pulseiraId,
         String pessoaMonitoradaId,
-        Instant registradaEm,
+        Instant registradoEm,
         Double latitude,
         Double longitude,
         Double altitudeMetros,
