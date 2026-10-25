@@ -8,14 +8,13 @@ import org.springframework.stereotype.Service;
 import br.edu.fatecpg.backend_pulseira.model.PessoaMonitorada;
 import br.edu.fatecpg.backend_pulseira.repository.PessoaMonitoradaRepository;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class PessoaMonitoradaService {
 
     private final PessoaMonitoradaRepository pessoaRepository;
-
-    public PessoaMonitoradaService(PessoaMonitoradaRepository pessoaRepository) {
-        this.pessoaRepository = pessoaRepository;
-    }
 
     public PessoaMonitorada cadastrar(PessoaMonitorada pessoa) {
         if (pessoa.getNome() == null || pessoa.getNome().isBlank()) {

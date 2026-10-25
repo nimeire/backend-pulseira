@@ -9,16 +9,14 @@ import br.edu.fatecpg.backend_pulseira.model.Pulseira;
 import br.edu.fatecpg.backend_pulseira.model.StatusPulseira;
 import br.edu.fatecpg.backend_pulseira.repository.PulseiraRepository;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class PulseiraService {
 
     private final PulseiraRepository pulseiraRepository;
     private final PessoaMonitoradaService pessoaService;
-
-    public PulseiraService(PulseiraRepository pulseiraRepository, PessoaMonitoradaService pessoaService) {
-        this.pulseiraRepository = pulseiraRepository;
-        this.pessoaService = pessoaService;
-    }
 
     public Pulseira cadastrar(Pulseira pulseira) {
         if (pulseira.getDispositivoId() == null || pulseira.getDispositivoId().isBlank()) {

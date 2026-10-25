@@ -13,22 +13,16 @@ import br.edu.fatecpg.backend_pulseira.model.TipoAlerta;
 import br.edu.fatecpg.backend_pulseira.repository.AlertaRepository;
 import br.edu.fatecpg.backend_pulseira.repository.TelemetriaRepository;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class TelemetriaService {
 
     private final TelemetriaRepository telemetriaRepository;
     private final AlertaRepository alertaRepository;
     private final PulseiraService pulseiraService;
     private final PessoaMonitoradaService pessoaService;
-
-    public TelemetriaService(TelemetriaRepository telemetriaRepository,
-            AlertaRepository alertaRepository, PulseiraService pulseiraService,
-            PessoaMonitoradaService pessoaService) {
-        this.telemetriaRepository = telemetriaRepository;
-        this.alertaRepository = alertaRepository;
-        this.pulseiraService = pulseiraService;
-        this.pessoaService = pessoaService;
-    }
 
     public Telemetria registrar(Telemetria telemetria) {
         if (telemetria.getDispositivoId() == null || telemetria.getDispositivoId().isBlank()) {

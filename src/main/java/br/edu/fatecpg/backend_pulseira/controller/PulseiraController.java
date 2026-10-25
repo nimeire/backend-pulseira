@@ -14,16 +14,15 @@ import br.edu.fatecpg.backend_pulseira.dto.VinculoPulseiraRequestDTO;
 import br.edu.fatecpg.backend_pulseira.model.Pulseira;
 import br.edu.fatecpg.backend_pulseira.service.PulseiraService;
 
+import lombok.RequiredArgsConstructor;
+
 /** Cadastro e ativação da pulseira física para o protótipo. */
 @RestController
 @RequestMapping("/api/pulseiras")
+@RequiredArgsConstructor
 public class PulseiraController {
 
     private final PulseiraService pulseiraService;
-
-    public PulseiraController(PulseiraService pulseiraService) {
-        this.pulseiraService = pulseiraService;
-    }
 
     @PostMapping
     public ResponseEntity<Pulseira> cadastrar(@RequestBody Pulseira pulseira) {

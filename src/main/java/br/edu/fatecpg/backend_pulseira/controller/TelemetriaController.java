@@ -4,8 +4,6 @@ import java.net.URI;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,26 +12,25 @@ import org.springframework.web.bind.annotation.RestController;
 import br.edu.fatecpg.backend_pulseira.model.Telemetria;
 import br.edu.fatecpg.backend_pulseira.service.TelemetriaService;
 
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * Entrada HTTP usada pela pulseira para registrar uma leitura de telemetria.
  */
+@Slf4j
 @RestController
 @RequestMapping("/api/telemetrias")
+@RequiredArgsConstructor
 public class TelemetriaController {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(TelemetriaController.class);
-
     private final TelemetriaService telemetriaService;
-
-    public TelemetriaController(TelemetriaService telemetriaService) {
-        this.telemetriaService = telemetriaService;
-    }
 
     @PostMapping
     public ResponseEntity<Telemetria> registrar(@RequestBody Telemetria telemetria) {
         Telemetria salva = telemetriaService.registrar(telemetria);
         if (Boolean.TRUE.equals(salva.getQuedaDetectada())) {
-            LOGGER.warn(
+            log.warn(
                     "POSSIVEL QUEDA | dispositivo={} | GPS=({}, {}) | telemetriaId={}",
                     salva.getDispositivoId(),
                     salva.getLatitude(),

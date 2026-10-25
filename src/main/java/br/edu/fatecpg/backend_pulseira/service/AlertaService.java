@@ -9,16 +9,14 @@ import br.edu.fatecpg.backend_pulseira.model.Alerta;
 import br.edu.fatecpg.backend_pulseira.model.StatusAlerta;
 import br.edu.fatecpg.backend_pulseira.repository.AlertaRepository;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class AlertaService {
 
     private final AlertaRepository alertaRepository;
     private final VinculoCuidadorService vinculoService;
-
-    public AlertaService(AlertaRepository alertaRepository, VinculoCuidadorService vinculoService) {
-        this.alertaRepository = alertaRepository;
-        this.vinculoService = vinculoService;
-    }
 
     public List<Alerta> listarPorPessoa(String cuidadorId, String pessoaId) {
         vinculoService.exigirAcessoAtivo(cuidadorId, pessoaId);

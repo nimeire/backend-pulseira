@@ -22,6 +22,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/api/pessoas-monitoradas").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/pulseiras").permitAll()
                         .requestMatchers(HttpMethod.PUT, "/api/pulseiras/*/vinculo").permitAll()
+                        .requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
                         .anyRequest().authenticated())
                 .httpBasic(httpBasic -> {})
                 .build();

@@ -11,16 +11,15 @@ import org.springframework.web.bind.annotation.RestController;
 import br.edu.fatecpg.backend_pulseira.model.PessoaMonitorada;
 import br.edu.fatecpg.backend_pulseira.service.PessoaMonitoradaService;
 
+import lombok.RequiredArgsConstructor;
+
 /** Cadastro inicial da pessoa que utilizará a pulseira. */
 @RestController
 @RequestMapping("/api/pessoas-monitoradas")
+@RequiredArgsConstructor
 public class PessoaMonitoradaController {
 
     private final PessoaMonitoradaService pessoaService;
-
-    public PessoaMonitoradaController(PessoaMonitoradaService pessoaService) {
-        this.pessoaService = pessoaService;
-    }
 
     @PostMapping
     public ResponseEntity<PessoaMonitorada> cadastrar(@RequestBody PessoaMonitorada pessoa) {

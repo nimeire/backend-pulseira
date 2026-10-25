@@ -8,14 +8,13 @@ import org.springframework.stereotype.Service;
 import br.edu.fatecpg.backend_pulseira.model.Cuidador;
 import br.edu.fatecpg.backend_pulseira.repository.CuidadorRepository;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class CuidadorService {
 
     private final CuidadorRepository cuidadorRepository;
-
-    public CuidadorService(CuidadorRepository cuidadorRepository) {
-        this.cuidadorRepository = cuidadorRepository;
-    }
 
     public Cuidador cadastrar(Cuidador cuidador) {
         exigirTexto(cuidador.getNome(), "O nome do cuidador é obrigatório.");

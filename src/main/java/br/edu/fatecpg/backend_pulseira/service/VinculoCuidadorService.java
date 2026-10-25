@@ -8,19 +8,15 @@ import br.edu.fatecpg.backend_pulseira.model.NivelAcesso;
 import br.edu.fatecpg.backend_pulseira.model.VinculoCuidador;
 import br.edu.fatecpg.backend_pulseira.repository.VinculoCuidadorRepository;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class VinculoCuidadorService {
 
     private final VinculoCuidadorRepository vinculoRepository;
     private final CuidadorService cuidadorService;
     private final PessoaMonitoradaService pessoaService;
-
-    public VinculoCuidadorService(VinculoCuidadorRepository vinculoRepository,
-            CuidadorService cuidadorService, PessoaMonitoradaService pessoaService) {
-        this.vinculoRepository = vinculoRepository;
-        this.cuidadorService = cuidadorService;
-        this.pessoaService = pessoaService;
-    }
 
     public VinculoCuidador vincular(String cuidadorId, String pessoaId, NivelAcesso nivelAcesso) {
         cuidadorService.buscarAtivo(cuidadorId);
