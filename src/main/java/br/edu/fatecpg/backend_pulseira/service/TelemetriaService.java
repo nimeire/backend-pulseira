@@ -3,14 +3,14 @@ package br.edu.fatecpg.backend_pulseira.service;
 import br.edu.fatecpg.backend_pulseira.dto.TelemetriaRequestDTO;
 import br.edu.fatecpg.backend_pulseira.dto.TelemetriaResponseDTO;
 import br.edu.fatecpg.backend_pulseira.model.Alerta;
-import br.edu.fatecpg.backend_pulseira.model.StatusAlerta;
+import br.edu.fatecpg.backend_pulseira.enums.StatusAlerta;
 import br.edu.fatecpg.backend_pulseira.model.Telemetria;
-import br.edu.fatecpg.backend_pulseira.model.TipoAlerta;
+import br.edu.fatecpg.backend_pulseira.enums.TipoAlerta;
 import br.edu.fatecpg.backend_pulseira.repository.AlertaRepository;
-import br.edu.fatecpg.backend_pulseira.repository.PulseiraRepository;
 import br.edu.fatecpg.backend_pulseira.repository.TelemetriaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import br.edu.fatecpg.backend_pulseira.repository.PulseiraRepository;
 
 import java.time.Instant;
 import java.util.List;
@@ -21,6 +21,7 @@ public class TelemetriaService {
 
     private final TelemetriaRepository telemetriaRepository;
     private final AlertaRepository alertaRepository;
+    private final PulseiraRepository pulseiraRepository;
 
     public TelemetriaResponseDTO salvar (TelemetriaRequestDTO dto) {
         Telemetria telemetria = new Telemetria();
@@ -40,11 +41,16 @@ public class TelemetriaService {
 
         telemetria.setRegistradoEm(Instant.now());
 
+        pulseiraRepository.findByDispositivoId(dto.dispositivoId()).ifPresent(pulseira -> {
+            telemetria.setPulseiraId(pulseira.getId());
+            telemetria.setPessoaMonitoradaId(pulseira.getPessoaMonitoradaId());
+        });
+
         Telemetria telemetriaSalva = telemetriaRepository.save(telemetria);
 
         if (Boolean.TRUE.equals(dto.quedaDetectada())) {
             Alerta alerta = new Alerta();
-            alerta.setTipo(TipoAlerta.POSSIVEL_QUEDA); // se der vermelho aqui, confirme os valores dentro de TipoAlerta.java
+            alerta.setTipo(TipoAlerta.POSSIVEL_QUEDA);
             alerta.setStatus(StatusAlerta.PENDENTE);
             alerta.setGeradoEm(Instant.now());
             alerta.setTelemetriaId(telemetriaSalva.getId());

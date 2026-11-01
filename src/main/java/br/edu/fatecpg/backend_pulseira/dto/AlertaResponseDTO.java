@@ -1,8 +1,8 @@
 package br.edu.fatecpg.backend_pulseira.dto;
 
 import br.edu.fatecpg.backend_pulseira.model.Alerta;
-import br.edu.fatecpg.backend_pulseira.model.StatusAlerta;
-import br.edu.fatecpg.backend_pulseira.model.TipoAlerta;
+import br.edu.fatecpg.backend_pulseira.enums.StatusAlerta;
+import br.edu.fatecpg.backend_pulseira.enums.TipoAlerta;
 
 import java.time.Instant;
 

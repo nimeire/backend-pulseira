@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 
 import br.edu.fatecpg.backend_pulseira.model.PessoaMonitorada;
 import br.edu.fatecpg.backend_pulseira.model.Pulseira;
-import br.edu.fatecpg.backend_pulseira.model.StatusPulseira;
+import br.edu.fatecpg.backend_pulseira.enums.StatusPulseira;
 import br.edu.fatecpg.backend_pulseira.repository.PulseiraRepository;
 
 @Service

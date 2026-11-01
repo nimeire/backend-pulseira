@@ -38,7 +38,7 @@ public class AlertaController {
         return ResponseEntity.ok(AlertaResponseDTO.fromEntity(alerta));
     }
 
-    // Cuidador encerra o atendimento com socorro concluído (status RESOLVIDO)
+
     @PatchMapping("/{alertaId}/resolver")
     public ResponseEntity<AlertaResponseDTO> resolver(
             @PathVariable String alertaId,
@@ -47,7 +47,7 @@ public class AlertaController {
         return ResponseEntity.ok(AlertaResponseDTO.fromEntity(alerta));
     }
 
-    // Marca como falso alarme, ex: tchau forte ou choque de panela (status FALSO_POSITIVO)
+
     @PatchMapping("/{alertaId}/falso-positivo")
     public ResponseEntity<AlertaResponseDTO> marcarFalsoPositivo(
             @PathVariable String alertaId,

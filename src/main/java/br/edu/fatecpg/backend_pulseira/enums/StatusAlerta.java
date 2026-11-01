@@ -1,4 +1,4 @@
-package br.edu.fatecpg.backend_pulseira.model;
+package br.edu.fatecpg.backend_pulseira.enums;
 
 /**
  * Ciclo de vida de um alerta enviado para a dashboard do cuidador.

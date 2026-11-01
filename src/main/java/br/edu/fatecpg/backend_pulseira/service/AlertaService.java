@@ -6,7 +6,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import br.edu.fatecpg.backend_pulseira.model.Alerta;
-import br.edu.fatecpg.backend_pulseira.model.StatusAlerta;
+import br.edu.fatecpg.backend_pulseira.enums.StatusAlerta;
 import br.edu.fatecpg.backend_pulseira.repository.AlertaRepository;
 
 @Service

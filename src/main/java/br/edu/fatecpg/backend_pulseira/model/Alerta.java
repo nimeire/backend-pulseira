@@ -2,6 +2,8 @@ package br.edu.fatecpg.backend_pulseira.model;
 
 import java.time.Instant;
 
+import br.edu.fatecpg.backend_pulseira.enums.StatusAlerta;
+import br.edu.fatecpg.backend_pulseira.enums.TipoAlerta;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.CompoundIndex;
 import org.springframework.data.mongodb.core.mapping.Document;

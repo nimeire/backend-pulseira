@@ -24,7 +24,7 @@ public class CuidadorController {
         Cuidador cuidador = new Cuidador();
         cuidador.setNome(dto.nome());
         cuidador.setEmail(dto.email());
-        cuidador.setSenhaHash(dto.senha()); // Futuramente pode aplicar BCryptPasswordEncoder
+        cuidador.setSenhaHash(dto.senha());
 
         Cuidador salvo = cuidadorService.cadastrar(cuidador);
         return ResponseEntity.status(HttpStatus.CREATED).body(CuidadorResponseDTO.fromEntity(salvo));

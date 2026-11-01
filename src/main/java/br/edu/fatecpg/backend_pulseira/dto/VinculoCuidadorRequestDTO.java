@@ -1,6 +1,6 @@
 package br.edu.fatecpg.backend_pulseira.dto;
 
-import br.edu.fatecpg.backend_pulseira.model.NivelAcesso;
+import br.edu.fatecpg.backend_pulseira.enums.NivelAcesso;
 import jakarta.validation.constraints.NotBlank;
 
 public record VinculoCuidadorRequestDTO(

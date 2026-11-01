@@ -1,4 +1,4 @@
-package br.edu.fatecpg.backend_pulseira.model;
+package br.edu.fatecpg.backend_pulseira.enums;
 
 public enum StatusPulseira {
     ATIVA,

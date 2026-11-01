@@ -1,7 +1,7 @@
 package br.edu.fatecpg.backend_pulseira.dto;
 
 import br.edu.fatecpg.backend_pulseira.model.Pulseira;
-import br.edu.fatecpg.backend_pulseira.model.StatusPulseira;
+import br.edu.fatecpg.backend_pulseira.enums.StatusPulseira;
 
 import java.time.Instant;
 

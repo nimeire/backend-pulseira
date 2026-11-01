@@ -1,20 +1,22 @@
 package br.edu.fatecpg.backend_pulseira.service;
 
-import java.time.Instant;
-import java.util.Locale;
-
-import org.springframework.stereotype.Service;
-
 import br.edu.fatecpg.backend_pulseira.model.Cuidador;
 import br.edu.fatecpg.backend_pulseira.repository.CuidadorRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
+import java.time.Instant;
+import java.util.Locale;
 
 @Service
 public class CuidadorService {
 
     private final CuidadorRepository cuidadorRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public CuidadorService(CuidadorRepository cuidadorRepository) {
+    public CuidadorService(CuidadorRepository cuidadorRepository, PasswordEncoder passwordEncoder) {
         this.cuidadorRepository = cuidadorRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public Cuidador cadastrar(Cuidador cuidador) {
@@ -28,6 +30,11 @@ public class CuidadorService {
         }
 
         cuidador.setEmail(emailNormalizado);
+
+
+        String hashGerado = passwordEncoder.encode(cuidador.getSenhaHash());
+        cuidador.setSenhaHash(hashGerado);
+
         cuidador.setAtivo(true);
         cuidador.setCriadoEm(Instant.now());
         return cuidadorRepository.save(cuidador);

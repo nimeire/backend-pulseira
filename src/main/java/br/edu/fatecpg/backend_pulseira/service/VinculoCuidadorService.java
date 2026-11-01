@@ -4,7 +4,7 @@ import java.time.Instant;
 
 import org.springframework.stereotype.Service;
 
-import br.edu.fatecpg.backend_pulseira.model.NivelAcesso;
+import br.edu.fatecpg.backend_pulseira.enums.NivelAcesso;
 import br.edu.fatecpg.backend_pulseira.model.VinculoCuidador;
 import br.edu.fatecpg.backend_pulseira.repository.VinculoCuidadorRepository;
 
