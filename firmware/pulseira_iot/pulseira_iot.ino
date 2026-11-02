@@ -185,7 +185,7 @@ void ensureWiFi() {
 }
 
 // Campos latitude/longitude/altitude/precisao sao omitidos: a pulseira nao usa mais GPS.
-// "panicoAcionado" e "quedaCancelada" ainda nao sao lidos pelo back-end atual (sao ignorados).
+// "quedaDetectada" e "panicoAcionado" so vao true uma vez, no envio do alerta. "quedaCancelada" e ignorado pelo back-end.
 String buildTelemetryJson(const MotionReading &motion, bool fallDetected, bool panic, bool fallCancelled) {
   String json;
   json.reserve(400);
@@ -390,8 +390,8 @@ void handleNetwork() {
 
   if ((pendingFallAlert || pendingPanicAlert) && now - lastAlertTryAt >= ALERT_RETRY_INTERVAL_MS) {
     lastAlertTryAt = now;
-    // O pânico usa o mesmo sinal da queda, pois o back-end só gera alerta por quedaDetectada.
-    const bool sent = sendTelemetry(lastMotion, pendingFallAlert || pendingPanicAlert, pendingPanicAlert, false);
+    // Queda e pânico são sinais separados: quedaDetectada gera POSSIVEL_QUEDA, panicoAcionado gera PANICO.
+    const bool sent = sendTelemetry(lastMotion, pendingFallAlert, pendingPanicAlert, false);
     lastSendFailed = !sent;
     if (sent) {
       pendingFallAlert = false;
@@ -414,8 +414,8 @@ void handleNetwork() {
 
   if (now - lastTelemetryAt >= TELEMETRY_INTERVAL_MS) {
     lastTelemetryAt = now;
-    const bool panic = state == State::Panic;
-    const bool sent = sendTelemetry(lastMotion, false, panic, fallCancelledAfterAlert);
+    // panicoAcionado só vai true no alerta; nas telemetrias periódicas vai false para não repetir o alerta.
+    const bool sent = sendTelemetry(lastMotion, false, false, fallCancelledAfterAlert);
     lastSendFailed = !sent && WiFi.status() == WL_CONNECTED;
     if (sent) fallCancelledAfterAlert = false;
     Serial.printf("acc total: %.2f g | Wi-Fi: %s\n", lastMotion.magnitudeG,

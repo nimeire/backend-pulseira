@@ -56,4 +56,5 @@ public class Telemetria {
     private Double rotacaoZ;
 
     private Boolean quedaDetectada;
+    private Boolean panicoAcionado;
 }

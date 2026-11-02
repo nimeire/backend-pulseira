@@ -5,5 +5,6 @@ package br.edu.fatecpg.backend_pulseira.model;
  * estrutura do documento.
  */
 public enum TipoAlerta {
-    POSSIVEL_QUEDA
+    POSSIVEL_QUEDA,
+    PANICO
 }

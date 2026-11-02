@@ -45,14 +45,17 @@ public class TelemetriaService {
 
         Telemetria salva = telemetriaRepository.save(telemetria);
         if (Boolean.TRUE.equals(salva.getQuedaDetectada())) {
-            gerarAlertaDeQueda(salva);
+            gerarAlerta(salva, TipoAlerta.POSSIVEL_QUEDA);
+        }
+        if (Boolean.TRUE.equals(salva.getPanicoAcionado())) {
+            gerarAlerta(salva, TipoAlerta.PANICO);
         }
         return salva;
     }
 
-    private void gerarAlertaDeQueda(Telemetria telemetria) {
+    private void gerarAlerta(Telemetria telemetria, TipoAlerta tipo) {
         Alerta alerta = new Alerta();
-        alerta.setTipo(TipoAlerta.POSSIVEL_QUEDA);
+        alerta.setTipo(tipo);
         alerta.setStatus(StatusAlerta.PENDENTE);
         alerta.setPessoaMonitoradaId(telemetria.getPessoaMonitoradaId());
         alerta.setPulseiraId(telemetria.getPulseiraId());

@@ -37,6 +37,12 @@ public class TelemetriaController {
                     salva.getLongitude(),
                     salva.getId());
         }
+        if (Boolean.TRUE.equals(salva.getPanicoAcionado())) {
+            log.warn(
+                    "PANICO | dispositivo={} | telemetriaId={}",
+                    salva.getDispositivoId(),
+                    salva.getId());
+        }
         URI endereco = URI.create("/api/telemetrias/" + salva.getId());
         return ResponseEntity.created(endereco).body(salva);
     }

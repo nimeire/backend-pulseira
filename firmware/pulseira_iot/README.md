@@ -101,13 +101,18 @@ Ao cancelar, a buzina dá 2 bipes curtos; ao acionar o pânico, 1 bipe.
 1. O MPU6500 observa queda livre abaixo de `0,45 g` seguida de impacto acima de `2,5 g` em até 1,2 segundo. São limiares de partida: ajuste-os depois de testes controlados, pois não caracterizam detecção médica certificada.
 2. Começa a contagem de 15 s com aviso sonoro. Nada é enviado nesse período.
 3. Se o botão for apertado, a queda é cancelada e nenhum alerta sai.
-4. Sem cancelamento, o firmware envia `quedaDetectada: true`, que gera o alerta no back-end. O envio é repetido a cada 3 s até a API responder 2xx.
+4. Sem cancelamento, o firmware envia `quedaDetectada: true`, que gera um alerta `POSSIVEL_QUEDA` no back-end. O envio é repetido a cada 3 s até a API responder 2xx.
 
-### Pânico e campos extras
+### Queda e pânico: sinais separados
 
-Ao acionar o pânico, o firmware envia **uma** telemetria com `quedaDetectada: true` (o mesmo sinal da queda), pois o back-end atual só gera alerta por esse campo. O alerta aparece como `POSSIVEL_QUEDA`. O envio é repetido a cada 3 s até a API responder 2xx. Enquanto o pânico durar, as telemetrias periódicas seguem com `quedaDetectada: false`, para não gerar alertas repetidos.
+O firmware manda **um** envio por alerta, com campos diferentes:
 
-O firmware também envia `panicoAcionado` e `quedaCancelada`, campos que o back-end atual ignora; servem para diferenciar pânico de queda quando o back-end passar a lê-los.
+| Evento | Campos do envio | Alerta gerado no back-end |
+|---|---|---|
+| Queda confirmada | `quedaDetectada: true`, `panicoAcionado: false` | `POSSIVEL_QUEDA` |
+| Pânico (botão 2 s) | `quedaDetectada: false`, `panicoAcionado: true` | `PANICO` |
+
+O envio é repetido a cada 3 s até a API responder 2xx. As telemetrias periódicas (5 s) vão sempre com os dois campos `false`, para não repetir o alerta. O campo `quedaCancelada` é só informativo e o back-end o ignora.
 
 ### Parar o alarme pelo front
 
