@@ -8,6 +8,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import br.edu.fatecpg.backend_pulseira.security.AcessoNegadoException;
+
 /** Retorna mensagens compreensíveis para falhas de cadastro e validação da pulseira. */
 @RestControllerAdvice
 public class ApiExceptionHandler {
@@ -15,6 +17,11 @@ public class ApiExceptionHandler {
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<Map<String, Object>> tratarRequisicaoInvalida(IllegalArgumentException exception) {
         return resposta(HttpStatus.BAD_REQUEST, exception.getMessage());
+    }
+
+    @ExceptionHandler(AcessoNegadoException.class)
+    public ResponseEntity<Map<String, Object>> tratarAcessoNegado(AcessoNegadoException exception) {
+        return resposta(HttpStatus.FORBIDDEN, exception.getMessage());
     }
 
     @ExceptionHandler(IllegalStateException.class)

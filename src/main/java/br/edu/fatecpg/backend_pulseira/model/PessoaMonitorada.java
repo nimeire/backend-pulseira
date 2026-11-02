@@ -4,6 +4,7 @@ import java.time.Instant;
 import java.time.LocalDate;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import lombok.Getter;
@@ -30,4 +31,8 @@ public class PessoaMonitorada {
     private InformacoesMedicas informacoesMedicas;
     private Boolean ativa;
     private Instant criadoEm;
+
+    /** Código que a pessoa compartilha para que um responsável se vincule a ela. */
+    @Indexed(unique = true, sparse = true)
+    private String codigoVinculo;
 }

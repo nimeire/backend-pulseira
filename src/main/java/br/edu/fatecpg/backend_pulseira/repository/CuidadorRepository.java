@@ -9,4 +9,6 @@ import br.edu.fatecpg.backend_pulseira.model.Cuidador;
 public interface CuidadorRepository extends MongoRepository<Cuidador, String> {
     Optional<Cuidador> findByEmail(String email);
     boolean existsByEmail(String email);
+    boolean existsByCpf(String cpf);
+    Optional<Cuidador> findByPessoaMonitoradaId(String pessoaMonitoradaId);
 }

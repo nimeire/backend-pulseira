@@ -29,4 +29,7 @@ public class Pulseira {
     private StatusPulseira status;
     private Instant vinculadaEm;
     private Instant atualizadaEm;
+
+    /** Última vez que a pulseira se comunicou com o servidor (leitura ou consulta de alarme). */
+    private Instant ultimoSinalEm;
 }

@@ -1,6 +1,8 @@
 package br.edu.fatecpg.backend_pulseira.service;
 
 import java.time.Instant;
+import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
@@ -25,7 +27,6 @@ public class PulseiraService {
         if (pulseiraRepository.findByDispositivoId(pulseira.getDispositivoId().trim()).isPresent()) {
             throw new IllegalArgumentException("Já existe uma pulseira com este dispositivo.");
         }
-
         pulseira.setDispositivoId(pulseira.getDispositivoId().trim());
         pulseira.setStatus(StatusPulseira.INATIVA);
         pulseira.setAtualizadaEm(Instant.now());
@@ -35,6 +36,7 @@ public class PulseiraService {
     public Pulseira vincular(String pulseiraId, String pessoaId) {
         Pulseira pulseira = buscarPorId(pulseiraId);
         PessoaMonitorada pessoa = pessoaService.buscarAtiva(pessoaId);
+
         if (pulseira.getPessoaMonitoradaId() != null) {
             throw new IllegalStateException("A pulseira já está vinculada a uma pessoa.");
         }
@@ -45,6 +47,37 @@ public class PulseiraService {
         pulseira.setVinculadaEm(agora);
         pulseira.setAtualizadaEm(agora);
         return pulseiraRepository.save(pulseira);
+    }
+
+    /** Pareamento feito pela própria pessoa, a partir do código gravado na pulseira. */
+    public Pulseira parear(String dispositivoId, String pessoaId) {
+        if (dispositivoId == null || dispositivoId.isBlank()) {
+            throw new IllegalArgumentException("Informe o código do dispositivo.");
+        }
+        Pulseira pulseira = buscarPorDispositivo(dispositivoId.trim());
+        return vincular(pulseira.getId(), pessoaId);
+    }
+
+    public Pulseira desvincular(Pulseira pulseira) {
+        Instant agora = Instant.now();
+        pulseira.setPessoaMonitoradaId(null);
+        pulseira.setStatus(StatusPulseira.INATIVA);
+        pulseira.setVinculadaEm(null);
+        pulseira.setAtualizadaEm(agora);
+        return pulseiraRepository.save(pulseira);
+    }
+
+    public void registrarSinal(Pulseira pulseira) {
+        pulseira.setUltimoSinalEm(Instant.now());
+        pulseiraRepository.save(pulseira);
+    }
+
+    public Optional<Pulseira> buscarPorPessoa(String pessoaId) {
+        return pulseiraRepository.findByPessoaMonitoradaId(pessoaId).stream().findFirst();
+    }
+
+    public List<Pulseira> listarTodas() {
+        return pulseiraRepository.findAll();
     }
 
     public Pulseira buscarPorDispositivo(String dispositivoId) {

@@ -2,6 +2,7 @@ package br.edu.fatecpg.backend_pulseira.service;
 
 import java.time.Instant;
 import java.util.Locale;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
@@ -39,6 +40,19 @@ public class CuidadorService {
             throw new IllegalStateException("O cuidador está inativo.");
         }
         return cuidador;
+    }
+
+    /** Conta de acesso que representa a pessoa monitorada (se ela tiver uma). */
+    public Optional<Cuidador> buscarContaDaPessoa(String pessoaId) {
+        return cuidadorRepository.findByPessoaMonitoradaId(pessoaId);
+    }
+
+    public Cuidador salvar(Cuidador conta) {
+        return cuidadorRepository.save(conta);
+    }
+
+    public Optional<Cuidador> buscarPorId(String cuidadorId) {
+        return cuidadorRepository.findById(cuidadorId);
     }
 
     private void exigirEmail(String email) {

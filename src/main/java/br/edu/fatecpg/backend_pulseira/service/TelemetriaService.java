@@ -36,6 +36,7 @@ public class TelemetriaService {
             throw new IllegalStateException("A pulseira precisa estar ativa e vinculada para enviar telemetria.");
         }
         pessoaService.buscarAtiva(pulseira.getPessoaMonitoradaId());
+        pulseiraService.registrarSinal(pulseira);
 
         // Os vínculos vêm do cadastro da pulseira, nunca do dispositivo externo.
         telemetria.setDispositivoId(pulseira.getDispositivoId());
