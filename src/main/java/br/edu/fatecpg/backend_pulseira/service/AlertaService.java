@@ -23,6 +23,17 @@ public class AlertaService {
         return alertaRepository.findByPessoaMonitoradaIdOrderByGeradoEmDesc(pessoaId);
     }
 
+    /**
+     * A pulseira deve manter o alarme enquanto o alerta mais recente da pessoa
+     * ainda não foi resolvido nem marcado como falso positivo.
+     */
+    public boolean alarmeAtivo(String pessoaId) {
+        return alertaRepository.findFirstByPessoaMonitoradaIdOrderByGeradoEmDesc(pessoaId)
+                .map(alerta -> alerta.getStatus() == StatusAlerta.PENDENTE
+                        || alerta.getStatus() == StatusAlerta.RECONHECIDO)
+                .orElse(false);
+    }
+
     public Alerta reconhecer(String alertaId, String cuidadorId, String observacao) {
         Alerta alerta = buscarComAcesso(alertaId, cuidadorId);
         if (alerta.getStatus() != StatusAlerta.PENDENTE) {

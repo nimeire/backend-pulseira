@@ -1,6 +1,7 @@
 package br.edu.fatecpg.backend_pulseira.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
 
@@ -14,4 +15,6 @@ public interface AlertaRepository extends MongoRepository<Alerta, String> {
     );
 
     List<Alerta> findByPessoaMonitoradaIdOrderByGeradoEmDesc(String pessoaMonitoradaId);
+
+    Optional<Alerta> findFirstByPessoaMonitoradaIdOrderByGeradoEmDesc(String pessoaMonitoradaId);
 }
