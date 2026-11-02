@@ -20,6 +20,10 @@ Serve para qualquer lugar: basta um computador com a Arduino IDE, o cabo USB e o
 2. **IP do servidor:** no computador que roda o back-end, abra o terminal e digite `ipconfig` (Windows) ou `ip a` (Linux). Anote o endereço IPv4 da placa de rede em uso, por exemplo `192.168.0.10`. Ele precisa ser da **mesma rede** da pulseira. Se o roteador trocar o IP do computador, repita este passo.
 3. **Back-end rodando:** a API precisa estar ligada na porta `8080`. No Windows, permita o Java em redes privadas (e públicas, se for o caso) quando o firewall perguntar.
 
+### HTTP ou HTTPS
+
+O firmware escolhe pelo início da `TELEMETRY_URL`. Com `https://` ele usa conexão segura, **sem validar o certificado do servidor** (`setInsecure`). Isso criptografa o tráfego e serve para o protótipo e para túneis como o da Cloudflare, mas não protege contra alguém que se passe pelo servidor. Cada envio por HTTPS leva 1 a 3 s por causa do handshake. Se o servidor ou túnel mudar de endereço (os túneis gratuitos mudam a cada reinício), atualize o `config.h` e grave de novo.
+
 ### 3. Preencher o `config.h`
 Abra `config.h` e troque os textos de exemplo:
 
@@ -27,7 +31,7 @@ Abra `config.h` e troque os textos de exemplo:
 |---|---|---|
 | `WIFI_SSID` | Nome da rede 2,4 GHz | `"MinhaRede"` |
 | `WIFI_PASSWORD` | Senha do Wi-Fi | `"minhasenha"` |
-| `TELEMETRY_URL` | `http://` + IP do servidor + `:8080/api/telemetrias` | `"http://192.168.0.10:8080/api/telemetrias"` |
+| `TELEMETRY_URL` | Rede local: `http://` + IP do servidor + `:8080/api/telemetrias`. Servidor ou túnel com HTTPS: `https://` + endereço público + `/api/telemetrias` | `"http://192.168.0.10:8080/api/telemetrias"` ou `"https://nome-do-tunel.trycloudflare.com/api/telemetrias"` |
 | `DEVICE_ID` | Identificador da pulseira, igual ao `dispositivoId` do cadastro | `"ESP12E-PULSEIRA-001"` |
 
 A pulseira precisa estar **cadastrada, ativa e vinculada a uma pessoa** no back-end. Caso contrário, a API responde 400.

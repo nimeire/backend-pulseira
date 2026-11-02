@@ -12,6 +12,7 @@
 
 #include <ESP8266WiFi.h>
 #include <ESP8266HTTPClient.h>
+#include <WiFiClientSecure.h>
 #include <Wire.h>
 #include "config.h"
 
@@ -42,6 +43,7 @@ constexpr unsigned long WIFI_RETRY_INTERVAL_MS = 10000;
 constexpr unsigned long ALERT_RETRY_INTERVAL_MS = 3000;
 constexpr unsigned long ALARM_POLL_INTERVAL_MS = 2000;
 constexpr uint16_t HTTP_TIMEOUT_MS = 1500;
+constexpr uint16_t HTTPS_TIMEOUT_MS = 6000;  // o handshake TLS é mais lento
 
 constexpr unsigned long DEBOUNCE_MS = 30;
 constexpr unsigned long LONG_PRESS_MS = 2000;
@@ -202,12 +204,25 @@ String buildTelemetryJson(const MotionReading &motion, bool fallDetected, bool p
   return json;
 }
 
+// Abre a requisição em HTTP ou HTTPS conforme o início da URL. No HTTPS o certificado do servidor
+// não é validado (setInsecure): serve para o protótipo/túnel, mas não protege contra interceptação ativa.
+bool beginHttp(HTTPClient &http, WiFiClient &plain, WiFiClientSecure &secure, const String &url) {
+  if (url.startsWith("https://")) {
+    secure.setInsecure();
+    secure.setBufferSizes(1024, 512);
+    http.setTimeout(HTTPS_TIMEOUT_MS);
+    return http.begin(secure, url);
+  }
+  http.setTimeout(HTTP_TIMEOUT_MS);
+  return http.begin(plain, url);
+}
+
 bool sendTelemetry(const MotionReading &motion, bool fallDetected, bool panic, bool fallCancelled) {
   if (WiFi.status() != WL_CONNECTED) return false;
-  WiFiClient client;
+  WiFiClient plain;
+  WiFiClientSecure secure;
   HTTPClient http;
-  http.setTimeout(HTTP_TIMEOUT_MS);
-  if (!http.begin(client, TELEMETRY_URL)) return false;
+  if (!beginHttp(http, plain, secure, TELEMETRY_URL)) return false;
   http.addHeader("Content-Type", "application/json");
   const int status = http.POST(buildTelemetryJson(motion, fallDetected, panic, fallCancelled));
   Serial.printf("Telemetria HTTP: %d (queda=%d panico=%d)\n", status, fallDetected, panic);
@@ -271,9 +286,20 @@ void updateFallDetection(const MotionReading &motion) {
 }
 
 // Evento do botao: 1 = aperto curto (ao soltar), 2 = aperto longo (ao completar 2 s).
+// O envio por HTTPS bloqueia o loop por alguns segundos. A interrupção guarda que o botão foi
+// apertado nesse intervalo, para um aperto curto de cancelamento não se perder.
+volatile bool buttonPressLatched = false;
+void IRAM_ATTR onButtonFalling() { buttonPressLatched = true; }
+
 uint8_t pollButton() {
   const unsigned long now = millis();
   const bool raw = digitalRead(BUTTON_PIN) == LOW;
+  if (raw) {
+    buttonPressLatched = false;  // aperto ainda em andamento: o debounce normal cuida dele
+  } else if (buttonPressLatched && !buttonStable) {
+    buttonPressLatched = false;  // apertou e soltou durante um bloqueio
+    return 1;
+  }
   if (raw != buttonRaw) {
     buttonRaw = raw;
     buttonRawAt = now;
@@ -373,10 +399,10 @@ bool alarmResolvedByFront() {
   if (WiFi.status() != WL_CONNECTED) return false;
   String url = TELEMETRY_URL;
   url.replace("/api/telemetrias", String("/api/pulseiras/") + DEVICE_ID + "/alarme");
-  WiFiClient client;
+  WiFiClient plain;
+  WiFiClientSecure secure;
   HTTPClient http;
-  http.setTimeout(HTTP_TIMEOUT_MS);
-  if (!http.begin(client, url)) return false;
+  if (!beginHttp(http, plain, secure, url)) return false;
   const int status = http.GET();
   const String body = status == 200 ? http.getString() : String();
   http.end();
@@ -429,6 +455,7 @@ void setup() {
   pinMode(LED_PIN, OUTPUT);
   setLed(false);
   pinMode(BUTTON_PIN, INPUT_PULLUP);
+  attachInterrupt(digitalPinToInterrupt(BUTTON_PIN), onButtonFalling, FALLING);
 
   Serial.begin(115200);
   Wire.begin(D2, D1);
